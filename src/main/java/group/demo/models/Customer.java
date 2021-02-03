@@ -1,6 +1,5 @@
 package group.demo.models;
 
-//select CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email from Customer
 public class Customer {
     private String id;
     private String firstName;
@@ -19,5 +18,33 @@ public class Customer {
         this.postalCode = postalCode;
         this.phoneNumber = phoneNumber;
         this.email = email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
