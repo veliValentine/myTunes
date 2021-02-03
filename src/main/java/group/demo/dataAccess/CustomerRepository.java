@@ -60,6 +60,24 @@ public class CustomerRepository {
         return customers;
     }
 
+    private Customer parseCustomerResultSet(ResultSet resultSet) {
+        Customer customer = null;
+        try {
+            customer = new Customer(
+                    resultSet.getString("customerId"),
+                    resultSet.getString("FirstName"),
+                    resultSet.getString("LastName"),
+                    resultSet.getString("Country"),
+                    resultSet.getString("PostalCode"),
+                    resultSet.getString("Phone"),
+                    resultSet.getString("Email")
+            );
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        }
+        return customer;
+    }
+
     public Customer getCustomer(String customerId) {
         Customer customer = null;
         try {
@@ -128,21 +146,4 @@ public class CustomerRepository {
         return success;
     }
 
-    private Customer parseCustomerResultSet(ResultSet resultSet) {
-        Customer customer = null;
-        try {
-            customer = new Customer(
-                    resultSet.getString("customerId"),
-                    resultSet.getString("FirstName"),
-                    resultSet.getString("LastName"),
-                    resultSet.getString("Country"),
-                    resultSet.getString("PostalCode"),
-                    resultSet.getString("Phone"),
-                    resultSet.getString("Email")
-            );
-        } catch (Exception e) {
-            logger.errorToConsole(e.toString());
-        }
-        return customer;
-    }
 }
