@@ -17,12 +17,12 @@ public class CustomerRepository {
 
     private final String customerFields =
             "CustomerId, " +
-            "FirstName, " +
-            "LastName, " +
-            "Country, " +
-            "PostalCode, " +
-            "Phone, " +
-            "Email ";
+                    "FirstName, " +
+                    "LastName, " +
+                    "Country, " +
+                    "PostalCode, " +
+                    "Phone, " +
+                    "Email ";
 
     public CustomerRepository(Logger logger) {
         this.logger = logger;
@@ -37,6 +37,7 @@ public class CustomerRepository {
 
             PreparedStatement preparedStatement =
                     connection.prepareStatement("select " + customerFields + "from Customer");
+
             // Run statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -67,13 +68,15 @@ public class CustomerRepository {
             logger.logToConsole("Connection to database opened");
 
             // Prepare statement
-            PreparedStatement preparedStatement = connection.prepareStatement("select " + customerFields + " from Customer where CustomerId = ?");
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("select " + customerFields + " from Customer where CustomerId = ?");
             preparedStatement.setString(1, customerId);
 
-            // Execute and parse data
+            // Execute
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
+            // Parse data
+            while (resultSet.next()) {
                 customer = parseCustomerResultSet(resultSet);
             }
             logger.logToConsole("\tgetCustomer successful");
@@ -90,7 +93,7 @@ public class CustomerRepository {
         return customer;
     }
 
-    private Customer parseCustomerResultSet(ResultSet resultSet){
+    private Customer parseCustomerResultSet(ResultSet resultSet) {
         Customer customer = null;
         try {
             customer = new Customer(
@@ -102,7 +105,7 @@ public class CustomerRepository {
                     resultSet.getString("Phone"),
                     resultSet.getString("Email")
             );
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.errorToConsole(e.toString());
         }
         return customer;
