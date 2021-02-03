@@ -93,6 +93,40 @@ public class CustomerRepository {
         return customer;
     }
 
+    public boolean addCustomer(Customer inputCustomer) {
+        boolean success = false;
+        try {
+            // Open connection
+            connection = DriverManager.getConnection(URL);
+            logger.logToConsole("Connection to database opened");
+
+            // Prepare statement
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("Insert Into Customer (FirstName, LastName, Country, PostalCode, Phone, Email) values (?,?,?,?,?,?)");
+
+            preparedStatement.setString(1, inputCustomer.getFirstName());
+            preparedStatement.setString(2, inputCustomer.getLastName());
+            preparedStatement.setString(3, inputCustomer.getCountry());
+            preparedStatement.setString(4, inputCustomer.getPostalCode());
+            preparedStatement.setString(5, inputCustomer.getPhoneNumber());
+            preparedStatement.setString(6, inputCustomer.getEmail());
+
+            int result = preparedStatement.executeUpdate();
+            success = (result != 0);
+            logger.logToConsole("\taddCustomer successful: " + success);
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        } finally {
+            try {
+                connection.close();
+                logger.logToConsole("Connection to database closed");
+            } catch (Exception e) {
+                logger.errorToConsole(e.toString());
+            }
+        }
+        return success;
+    }
+
     private Customer parseCustomerResultSet(ResultSet resultSet) {
         Customer customer = null;
         try {
