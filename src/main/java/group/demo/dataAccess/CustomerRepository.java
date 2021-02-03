@@ -122,12 +122,7 @@ public class CustomerRepository {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("Insert Into Customer (FirstName, LastName, Country, PostalCode, Phone, Email) values (?,?,?,?,?,?)");
 
-            preparedStatement.setString(1, inputCustomer.getFirstName());
-            preparedStatement.setString(2, inputCustomer.getLastName());
-            preparedStatement.setString(3, inputCustomer.getCountry());
-            preparedStatement.setString(4, inputCustomer.getPostalCode());
-            preparedStatement.setString(5, inputCustomer.getPhoneNumber());
-            preparedStatement.setString(6, inputCustomer.getEmail());
+            setBasicCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
 
             // run statement and get result
             int result = preparedStatement.executeUpdate();
@@ -146,6 +141,19 @@ public class CustomerRepository {
         return success;
     }
 
+    private void setBasicCustomerValuesToPreparedStatement(PreparedStatement preparedStatement, Customer customer){
+        try {
+            preparedStatement.setString(1, customer.getFirstName());
+            preparedStatement.setString(2, customer.getLastName());
+            preparedStatement.setString(3, customer.getCountry());
+            preparedStatement.setString(4, customer.getPostalCode());
+            preparedStatement.setString(5, customer.getPhoneNumber());
+            preparedStatement.setString(6, customer.getEmail());
+        } catch (Exception e){
+            logger.errorToConsole(e.toString());
+        }
+    }
+
     public boolean updateCustomer(String inputId, Customer inputCustomer) {
         boolean success = false;
         try {
@@ -161,12 +169,7 @@ public class CustomerRepository {
             PreparedStatement preparedStatement =
                     connection.prepareStatement("Update Customer Set FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? WHERE CustomerId = ?;");
 
-            preparedStatement.setString(1, inputCustomer.getFirstName());
-            preparedStatement.setString(2, inputCustomer.getLastName());
-            preparedStatement.setString(3, inputCustomer.getCountry());
-            preparedStatement.setString(4, inputCustomer.getPostalCode());
-            preparedStatement.setString(5, inputCustomer.getPhoneNumber());
-            preparedStatement.setString(6, inputCustomer.getEmail());
+            setBasicCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
             preparedStatement.setString(7, inputCustomer.getId());
 
             // run statement and get result
