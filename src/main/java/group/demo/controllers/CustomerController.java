@@ -9,16 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(ControllerHelper.BASE_URL_v1)
 public class CustomerController {
+
     private Logger logger = new Logger();
     private CustomerRepository customerRepository = new CustomerRepository(logger);
-
-    // server health check
-    @RequestMapping("/health")
-    public String healthCheck() {
-        return "ok";
-    }
 
     // all customers
     @RequestMapping("/customers")
