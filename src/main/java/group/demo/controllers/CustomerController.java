@@ -4,10 +4,7 @@ import group.demo.dataAccess.CustomerRepository;
 import group.demo.logger.Logger;
 import group.demo.models.Customer;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -29,14 +26,14 @@ public class CustomerController {
         return customerRepository.getCustomers();
     }
 
-    @RequestMapping(value = "/customers", method = RequestMethod.POST)
-    public String addCustomer() {
-        return "Add new customer";
-    }
-
     @RequestMapping(value = "/customers/{customerId}")
     public Customer getCustomer(@PathVariable String customerId) {
         return customerRepository.getCustomer(customerId);
+    }
+
+    @RequestMapping(value = "/customers", method = RequestMethod.POST)
+    public boolean addCustomer(@RequestBody Customer customer) {
+        return customerRepository.addCustomer(customer);
     }
 
     @RequestMapping(value = "/customers/{customerId}", method = RequestMethod.PUT)
