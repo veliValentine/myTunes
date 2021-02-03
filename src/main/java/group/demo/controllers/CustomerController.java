@@ -35,7 +35,7 @@ public class CustomerController {
 
     // update customer
     @RequestMapping(value = "/customers/{customerId}", method = RequestMethod.PUT)
-    public String updateCustomer(@PathVariable String customerId) {
-        return "Modify customer with id: " + customerId;
+    public boolean updateCustomer(@PathVariable String customerId, @RequestBody Customer customer) {
+        return customerRepository.updateCustomer(customerId, customer);
     }
 }

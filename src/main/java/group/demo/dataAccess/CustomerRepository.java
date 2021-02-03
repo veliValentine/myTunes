@@ -146,4 +146,44 @@ public class CustomerRepository {
         return success;
     }
 
+    public boolean updateCustomer(String inputId, Customer inputCustomer) {
+        boolean success = false;
+        try {
+            String inputCustomerId = inputCustomer.getId();
+            if (!inputId.equals(inputCustomerId)) {
+                logger.errorToConsole("updateCustomer ID mismatch: path variable id different than customer.id");
+                return false;
+            }
+            // Open connection
+            connection = DriverManager.getConnection(URL);
+            logger.logToConsole("Connection to database opened");
+
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("Update Customer Set FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? WHERE CustomerId = ?;");
+
+            preparedStatement.setString(1, inputCustomer.getFirstName());
+            preparedStatement.setString(2, inputCustomer.getLastName());
+            preparedStatement.setString(3, inputCustomer.getCountry());
+            preparedStatement.setString(4, inputCustomer.getPostalCode());
+            preparedStatement.setString(5, inputCustomer.getPhoneNumber());
+            preparedStatement.setString(6, inputCustomer.getEmail());
+            preparedStatement.setString(7, inputCustomer.getId());
+
+            // run statement and get result
+            int result = preparedStatement.executeUpdate();
+            success = (result != 0);
+            logger.logToConsole("\tcustomer updated successful: " + success);
+
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        } finally {
+            try {
+                connection.close();
+                logger.logToConsole("Connection to database closed");
+            } catch (Exception e) {
+                logger.errorToConsole(e.toString());
+            }
+        }
+        return success;
+    }
 }
