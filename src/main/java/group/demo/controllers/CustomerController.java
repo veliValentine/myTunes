@@ -16,7 +16,7 @@ public class CustomerController {
 
     // server health check
     @RequestMapping("/health")
-    public String healthCheck(){
+    public String healthCheck() {
         return "ok";
     }
 
