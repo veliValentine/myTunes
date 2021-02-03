@@ -1,22 +1,32 @@
 package group.demo.controllers;
 
+import group.demo.dataAccess.CustomerRepository;
+import group.demo.logger.Logger;
+import group.demo.models.Customer;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api")
-public class ApiController {
+import java.util.ArrayList;
 
+@RestController
+@RequestMapping("/api/v1")
+public class CustomerController {
+    private Logger logger = new Logger();
+    private CustomerRepository customerRepository = new CustomerRepository(logger);
+
+    // server health check
     @RequestMapping("/health")
     public String healthCheck(){
         return "ok";
     }
 
+    // all customers
     @RequestMapping("/customers")
-    public String getCustomers() {
-        return "Return all customers";
+    public ArrayList<Customer> getCustomers() {
+        return customerRepository.getCustomers();
     }
 
     @RequestMapping(value = "/customers", method = RequestMethod.POST)
