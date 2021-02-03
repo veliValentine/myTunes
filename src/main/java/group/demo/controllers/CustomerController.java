@@ -35,8 +35,8 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/customers/{customerId}")
-    public String getCustomer(@PathVariable String customerId) {
-        return "Return customer with id: " + customerId;
+    public Customer getCustomer(@PathVariable String customerId) {
+        return customerRepository.getCustomer(customerId);
     }
 
     @RequestMapping(value = "/customers/{customerId}", method = RequestMethod.PUT)

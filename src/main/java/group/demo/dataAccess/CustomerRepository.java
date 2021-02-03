@@ -15,7 +15,16 @@ public class CustomerRepository {
 
     private final Logger logger;
 
-    public CustomerRepository(Logger logger){
+    private final String customerFields =
+            "CustomerId, " +
+            "FirstName, " +
+            "LastName, " +
+            "Country, " +
+            "PostalCode, " +
+            "Phone, " +
+            "Email ";
+
+    public CustomerRepository(Logger logger) {
         this.logger = logger;
     }
 
@@ -24,38 +33,19 @@ public class CustomerRepository {
         try {
             // Open connection
             connection = DriverManager.getConnection(URL);
-            logger.logToConsole("Connected to database successful");
+            logger.logToConsole("Connection to database opened");
 
             PreparedStatement preparedStatement =
-                    connection.prepareStatement("select " +
-                            "CustomerId, " +
-                            "FirstName, " +
-                            "LastName, " +
-                            "Country, " +
-                            "PostalCode, " +
-                            "Phone, " +
-                            "Email " +
-                            "from Customer"
-                    );
+                    connection.prepareStatement("select " + customerFields + "from Customer");
             // Run statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
             // Create new Customers list and add each customer to it
             customers = new ArrayList<>();
             while (resultSet.next()) {
-                customers.add(
-                        new Customer(
-                                resultSet.getString("customerId"),
-                                resultSet.getString("FirstName"),
-                                resultSet.getString("LastName"),
-                                resultSet.getString("Country"),
-                                resultSet.getString("PostalCode"),
-                                resultSet.getString("Phone"),
-                                resultSet.getString("Email")
-                        )
-                );
+                customers.add(parseCustomerResultSet(resultSet));
             }
-            logger.logToConsole("getCustomers successful");
+            logger.logToConsole("\tgetCustomers successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -67,5 +57,54 @@ public class CustomerRepository {
             }
         }
         return customers;
+    }
+
+    public Customer getCustomer(String customerId) {
+        Customer customer = null;
+        try {
+            // open connection
+            connection = DriverManager.getConnection(URL);
+            logger.logToConsole("Connection to database opened");
+
+            // Prepare statement
+            PreparedStatement preparedStatement = connection.prepareStatement("select " + customerFields + " from Customer where CustomerId = ?");
+            preparedStatement.setString(1, customerId);
+
+            // Execute and parse data
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                customer = parseCustomerResultSet(resultSet);
+            }
+            logger.logToConsole("\tgetCustomer successful");
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        } finally {
+            try {
+                connection.close();
+                logger.logToConsole("Connection to database closed");
+            } catch (Exception e) {
+                logger.errorToConsole(e.toString());
+            }
+        }
+        return customer;
+    }
+
+    private Customer parseCustomerResultSet(ResultSet resultSet){
+        Customer customer = null;
+        try {
+            customer = new Customer(
+                    resultSet.getString("customerId"),
+                    resultSet.getString("FirstName"),
+                    resultSet.getString("LastName"),
+                    resultSet.getString("Country"),
+                    resultSet.getString("PostalCode"),
+                    resultSet.getString("Phone"),
+                    resultSet.getString("Email")
+            );
+        } catch (Exception e){
+            logger.errorToConsole(e.toString());
+        }
+        return customer;
     }
 }
