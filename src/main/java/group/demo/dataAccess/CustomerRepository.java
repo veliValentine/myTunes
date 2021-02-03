@@ -15,14 +15,14 @@ public class CustomerRepository {
 
     private final Logger logger;
 
-    private final String customerFields =
+    private final String customerFields = "" +
             "CustomerId, " +
-                    "FirstName, " +
-                    "LastName, " +
-                    "Country, " +
-                    "PostalCode, " +
-                    "Phone, " +
-                    "Email ";
+            "FirstName, " +
+            "LastName, " +
+            "Country, " +
+            "PostalCode, " +
+            "Phone, " +
+            "Email ";
 
     public CustomerRepository(Logger logger) {
         this.logger = logger;
@@ -111,6 +111,7 @@ public class CustomerRepository {
             preparedStatement.setString(5, inputCustomer.getPhoneNumber());
             preparedStatement.setString(6, inputCustomer.getEmail());
 
+            // run statement and get result
             int result = preparedStatement.executeUpdate();
             success = (result != 0);
             logger.logToConsole("\taddCustomer successful: " + success);

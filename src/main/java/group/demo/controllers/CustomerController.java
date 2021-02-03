@@ -21,16 +21,19 @@ public class CustomerController {
         return customerRepository.getCustomers();
     }
 
+    // customer by ID
     @RequestMapping(value = "/customers/{customerId}")
     public Customer getCustomer(@PathVariable String customerId) {
         return customerRepository.getCustomer(customerId);
     }
 
+    // add customer
     @RequestMapping(value = "/customers", method = RequestMethod.POST)
     public boolean addCustomer(@RequestBody Customer customer) {
         return customerRepository.addCustomer(customer);
     }
 
+    // update customer
     @RequestMapping(value = "/customers/{customerId}", method = RequestMethod.PUT)
     public String updateCustomer(@PathVariable String customerId) {
         return "Modify customer with id: " + customerId;
