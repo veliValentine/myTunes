@@ -2,6 +2,7 @@ package group.demo.dataAccess;
 
 import group.demo.logger.Logger;
 import group.demo.models.Customer;
+import group.demo.models.SpendingCustomer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +18,6 @@ public class CustomerRepository {
     private final Logger logger;
 
     private final String baseCustomerFields = "" +
-            "CustomerId, " +
             "FirstName, " +
             "LastName, " +
             "Country, " +
@@ -33,7 +33,10 @@ public class CustomerRepository {
         ArrayList<Customer> customers = null;
         try {
             openConnectionAndLog();
-            PreparedStatement preparedStatement = prepareQuery("select " + baseCustomerFields + "from Customer;");
+            PreparedStatement preparedStatement = prepareQuery("" +
+                    "select " +
+                    "customerId, " + baseCustomerFields +
+                    "from Customer;");
             ResultSet resultSet = preparedStatement.executeQuery();
             // Create new Customers list and add each customer to it
             customers = parseCustomersResultSet(resultSet);
@@ -49,7 +52,7 @@ public class CustomerRepository {
     private ArrayList<Customer> parseCustomersResultSet(ResultSet resultSet) throws Exception {
         ArrayList<Customer> customers = new ArrayList<>();
         while (resultSet.next()) {
-            customers.add(parseBaseCustomerResultSet(resultSet));
+            customers.add(parseCustomerResultSet(resultSet));
         }
         return customers;
     }
@@ -58,13 +61,16 @@ public class CustomerRepository {
         Customer customer = null;
         try {
             openConnectionAndLog();
-            PreparedStatement preparedStatement = prepareQuery("select " + baseCustomerFields + " from Customer where CustomerId = ?;");
+            PreparedStatement preparedStatement = prepareQuery("" +
+                    "select " +
+                    "customerId, " + baseCustomerFields +
+                    " from Customer where CustomerId = ?;");
             preparedStatement.setString(1, customerId);
             // Execute
             ResultSet resultSet = preparedStatement.executeQuery();
             // Parse data
             while (resultSet.next()) {
-                customer = parseBaseCustomerResultSet(resultSet);
+                customer = parseCustomerResultSet(resultSet);
             }
             logger.logToConsole("\tgetCustomer successful");
         } catch (Exception e) {
@@ -79,8 +85,11 @@ public class CustomerRepository {
         boolean success = false;
         try {
             openConnectionAndLog();
-            PreparedStatement preparedStatement = prepareQuery("Insert Into Customer (FirstName, LastName, Country, PostalCode, Phone, Email) values (?,?,?,?,?,?);");
-            setBasicCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
+            PreparedStatement preparedStatement = prepareQuery("" +
+                    "Insert Into Customer " +
+                    "(FirstName, LastName, Country, PostalCode, Phone, Email)" +
+                    " values (?,?,?,?,?,?);");
+            setBaseCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
             // run statement and get result
             int result = preparedStatement.executeUpdate();
             success = (result != 0);
@@ -102,10 +111,12 @@ public class CustomerRepository {
                 return false;
             }
             openConnectionAndLog();
-
-            PreparedStatement preparedStatement = prepareQuery("Update Customer Set FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? WHERE CustomerId = ?;");
+            PreparedStatement preparedStatement = prepareQuery("" +
+                    "Update Customer Set " +
+                    "FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? " +
+                    "WHERE CustomerId = ?;");
             // set basic Customer inputs and customer ID
-            setBasicCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
+            setBaseCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
             preparedStatement.setString(7, inputCustomer.getId());
             // run statement and get result
             int result = preparedStatement.executeUpdate();
@@ -123,7 +134,12 @@ public class CustomerRepository {
         Map<String, String> countryMap = null;
         try {
             openConnectionAndLog();
-            PreparedStatement preparedStatement = prepareQuery("Select Country, count(country) From Customer group by Country order by COUNT(Country) DESC;");
+            PreparedStatement preparedStatement = prepareQuery("" +
+                    "Select " +
+                    "Country, count(country) " +
+                    "From Customer " +
+                    "group by Country " +
+                    "order by COUNT(Country) DESC;");
             ResultSet resultSet = preparedStatement.executeQuery();
             // Parse resultSet to country->count Map
             countryMap = parseResultToCountyCountLinkedHashMap(resultSet);
@@ -147,6 +163,40 @@ public class CustomerRepository {
         return countryMap;
     }
 
+    public ArrayList<SpendingCustomer> highestSpenders() {
+        ArrayList<SpendingCustomer> customers = null;
+        try {
+            openConnectionAndLog();
+            PreparedStatement preparedStatement =
+                    prepareQuery("Select " +
+                            "Customer.CustomerId, " + baseCustomerFields + ", sum(Total) " +
+                            "From Invoice join Customer on Invoice.CustomerId = Customer.CustomerId " +
+                            "group by Invoice.CustomerId " +
+                            "order by sum(total) desc;");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            customers = parseSpendingCustomersResultSet(resultSet);
+            logger.logToConsole("\tgetSpendingCustomers successful");
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        } finally {
+            finallyCloseConnectionAndLog();
+        }
+        return customers;
+    }
+
+    private ArrayList<SpendingCustomer> parseSpendingCustomersResultSet(ResultSet resultSet) throws Exception {
+        ArrayList<SpendingCustomer> spendingCustomers = new ArrayList<>();
+        while (resultSet.next()) {
+            // get customer from result set
+            Customer customer = parseCustomerResultSet(resultSet);
+            // get total spending from result set
+            double spending = Double.parseDouble(resultSet.getString("sum(Total)"));
+            // create new SpendingCustomer
+            spendingCustomers.add(new SpendingCustomer(customer, spending));
+        }
+        return spendingCustomers;
+    }
+
     // helper methods used more than once
     private void openConnectionAndLog() throws Exception {
         connection = DriverManager.getConnection(ConnectionHelper.CONNECTION_URL);
@@ -157,7 +207,7 @@ public class CustomerRepository {
         return connection.prepareStatement(query);
     }
 
-    private void setBasicCustomerValuesToPreparedStatement(PreparedStatement preparedStatement, Customer customer) throws Exception {
+    private void setBaseCustomerValuesToPreparedStatement(PreparedStatement preparedStatement, Customer customer) throws Exception {
         preparedStatement.setString(1, customer.getFirstName());
         preparedStatement.setString(2, customer.getLastName());
         preparedStatement.setString(3, customer.getCountry());
@@ -166,7 +216,7 @@ public class CustomerRepository {
         preparedStatement.setString(6, customer.getEmail());
     }
 
-    private Customer parseBaseCustomerResultSet(ResultSet resultSet) throws Exception {
+    private Customer parseCustomerResultSet(ResultSet resultSet) throws Exception {
         return new Customer(
                 resultSet.getString("customerId"),
                 resultSet.getString("FirstName"),
