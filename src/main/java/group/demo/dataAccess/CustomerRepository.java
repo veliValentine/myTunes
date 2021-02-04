@@ -8,6 +8,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CustomerRepository {
     private final String URL = ConnectionHelper.CONNECTION_URL;
@@ -50,12 +52,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            try {
-                connection.close();
-                logger.logToConsole("Connection to database closed");
-            } catch (Exception e) {
-                logger.errorToConsole(e.toString());
-            }
+            finallyCloseConnectionAndLog();
         }
         return customers;
     }
@@ -141,7 +138,7 @@ public class CustomerRepository {
         return success;
     }
 
-    private void setBasicCustomerValuesToPreparedStatement(PreparedStatement preparedStatement, Customer customer){
+    private void setBasicCustomerValuesToPreparedStatement(PreparedStatement preparedStatement, Customer customer) {
         try {
             preparedStatement.setString(1, customer.getFirstName());
             preparedStatement.setString(2, customer.getLastName());
@@ -149,7 +146,7 @@ public class CustomerRepository {
             preparedStatement.setString(4, customer.getPostalCode());
             preparedStatement.setString(5, customer.getPhoneNumber());
             preparedStatement.setString(6, customer.getEmail());
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.errorToConsole(e.toString());
         }
     }
@@ -157,8 +154,7 @@ public class CustomerRepository {
     public boolean updateCustomer(String inputId, Customer inputCustomer) {
         boolean success = false;
         try {
-            String inputCustomerId = inputCustomer.getId();
-            if (!inputId.equals(inputCustomerId)) {
+            if (!inputId.equals(inputCustomer.getId())) {
                 logger.errorToConsole("updateCustomer ID mismatch: path variable id different than customer.id");
                 return false;
             }
@@ -188,5 +184,40 @@ public class CustomerRepository {
             }
         }
         return success;
+    }
+
+    public Map<String, String> customersInCountry() {
+        Map<String, String> countryMap = null;
+        try {
+            connection = DriverManager.getConnection(URL);
+            logger.logToConsole("Connection to database opened");
+
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("Select Country, count(country) From Customer group by Country order by COUNT(Country) DESC;");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            countryMap = new LinkedHashMap<>();
+            while (resultSet.next()) {
+                countryMap.put(
+                        resultSet.getString("Country"),
+                        resultSet.getString("count(country)")
+                );
+            }
+            logger.logToConsole("\tcustomersInCountry successful");
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        } finally {
+            finallyCloseConnectionAndLog();
+        }
+        return countryMap;
+    }
+
+    private void finallyCloseConnectionAndLog() {
+        try {
+            connection.close();
+            logger.logToConsole("Connection to database closed");
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        }
     }
 }

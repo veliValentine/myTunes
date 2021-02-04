@@ -7,35 +7,42 @@ import group.demo.models.Customer;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-@RequestMapping(ControllerHelper.BASE_URL_v1)
+@RequestMapping(ControllerHelper.API_BASE_URL_v1 + "/customers")
 public class CustomerController {
 
     private Logger logger = new Logger();
     private CustomerRepository customerRepository = new CustomerRepository(logger);
 
     // all customers
-    @RequestMapping("/customers")
+    @GetMapping
     public ArrayList<Customer> getCustomers() {
         return customerRepository.getCustomers();
     }
 
     // customer by ID
-    @RequestMapping(value = "/customers/{customerId}")
+    @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
     public Customer getCustomer(@PathVariable String customerId) {
         return customerRepository.getCustomer(customerId);
     }
 
     // add customer
-    @RequestMapping(value = "/customers", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public boolean addCustomer(@RequestBody Customer customer) {
         return customerRepository.addCustomer(customer);
     }
 
     // update customer
-    @RequestMapping(value = "/customers/{customerId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{customerId}", method = RequestMethod.PUT)
     public boolean updateCustomer(@PathVariable String customerId, @RequestBody Customer customer) {
         return customerRepository.updateCustomer(customerId, customer);
+    }
+
+    @RequestMapping(value = "/country", method = RequestMethod.GET)
+    public Map<String, String> customersInCountry(){
+        return customerRepository.customersInCountry();
     }
 }
