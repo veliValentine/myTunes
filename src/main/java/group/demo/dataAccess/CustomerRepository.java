@@ -197,6 +197,58 @@ public class CustomerRepository {
         return spendingCustomers;
     }
 
+    public ArrayList<String> customerTopGenres(String customerID) {
+        ArrayList<String> genres = null;
+        try {
+            openConnectionAndLog();
+            // Query gets genreName from table that contains customerId, genreName and total genreCount for wanted customer
+            // from there it gets all genreCounts that equals to biggest genreCount (where genreCount = secondQuery)
+            PreparedStatement preparedStatement =
+                    prepareQuery("""
+                            select genreName
+                            from (
+                                     select Customer.CustomerId as id, Genre.Name as genreName, count(Genre.Name) as genreCount
+                                     from Customer
+                                              join Invoice on Customer.CustomerId = Invoice.CustomerId
+                                              join InvoiceLine on Invoice.InvoiceId = InvoiceLine.InvoiceId
+                                              join Track on InvoiceLine.TrackId = Track.TrackId
+                                              join Genre on Track.GenreId = Genre.GenreId
+                                     where Customer.CustomerId = ?
+                                     group by Genre.Name
+                                     order by count(Genre.Name) DESC
+                                 )
+                            where genreCount = (
+                                select count(genre.name)
+                                from Invoice
+                                         join InvoiceLine on Invoice.InvoiceId = InvoiceLine.InvoiceId
+                                         join Track on InvoiceLine.TrackId = Track.TrackId
+                                         join Genre on Track.GenreId = Genre.GenreId
+                                where Invoice.CustomerId = id
+                                group by Genre.Name
+                                order by count(Genre.Name) DESC
+                                limit 1
+                            )"""
+                    );
+            preparedStatement.setString(1, customerID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            genres = parseGenreResultSet(resultSet);
+            logger.logToConsole("\tgetCustomerGenres successful");
+        } catch (Exception e) {
+            logger.errorToConsole(e.toString());
+        } finally {
+            finallyCloseConnectionAndLog();
+        }
+        return genres;
+    }
+
+    private ArrayList<String> parseGenreResultSet(ResultSet resultSet) throws Exception {
+        ArrayList<String> genres = new ArrayList<>();
+        while (resultSet.next()) {
+            genres.add(resultSet.getString("genreName"));
+        }
+        return genres;
+    }
+
     // helper methods used more than once
     private void openConnectionAndLog() throws Exception {
         connection = DriverManager.getConnection(ConnectionHelper.CONNECTION_URL);

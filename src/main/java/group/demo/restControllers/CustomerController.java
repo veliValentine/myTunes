@@ -7,7 +7,7 @@ import group.demo.models.Customer;
 import group.demo.models.SpendingCustomer;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,14 +19,8 @@ public class CustomerController {
 
     // all customers
     @GetMapping
-    public ArrayList<Customer> getCustomers() {
+    public List<Customer> getCustomers() {
         return customerRepository.getCustomers();
-    }
-
-    // customer by ID
-    @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
-    public Customer getCustomer(@PathVariable String customerId) {
-        return customerRepository.getCustomer(customerId);
     }
 
     // add customer
@@ -35,10 +29,22 @@ public class CustomerController {
         return customerRepository.addCustomer(customer);
     }
 
+    // customer by ID
+    @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
+    public Customer getCustomer(@PathVariable String customerId) {
+        return customerRepository.getCustomer(customerId);
+    }
+
     // update customer
     @RequestMapping(value = "/{customerId}", method = RequestMethod.PUT)
     public boolean updateCustomer(@PathVariable String customerId, @RequestBody Customer customer) {
         return customerRepository.updateCustomer(customerId, customer);
+    }
+
+    // customer top genres
+    @RequestMapping(value = "/{customerId}/genres", method = RequestMethod.GET)
+    public List<String> customerTopGenres(@PathVariable String customerId){
+        return customerRepository.customerTopGenres(customerId);
     }
 
     @RequestMapping(value = "/country", method = RequestMethod.GET)
@@ -47,7 +53,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/spending", method = RequestMethod.GET)
-    public ArrayList<SpendingCustomer> highestSpendingCustomers() {
+    public List<SpendingCustomer> highestSpendingCustomers() {
         return customerRepository.highestSpenders();
     }
 }
