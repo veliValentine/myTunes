@@ -43,15 +43,17 @@ public class CustomerController {
 
     // customer top genres
     @RequestMapping(value = "/{customerId}/genres", method = RequestMethod.GET)
-    public List<String> customerTopGenres(@PathVariable String customerId){
+    public List<String> customerTopGenres(@PathVariable String customerId) {
         return customerRepository.customerTopGenres(customerId);
     }
 
+    // customer count by countries
     @RequestMapping(value = "/country", method = RequestMethod.GET)
     public Map<String, String> customersInCountry() {
         return customerRepository.customersInCountry();
     }
 
+    // customers ordered by their spending
     @RequestMapping(value = "/spending", method = RequestMethod.GET)
     public List<SpendingCustomer> highestSpendingCustomers() {
         return customerRepository.highestSpenders();
