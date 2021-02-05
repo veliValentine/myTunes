@@ -1,4 +1,4 @@
-package group.demo.controllers;
+package group.demo.restControllers;
 
 import group.demo.dataAccess.CustomerRepository;
 import group.demo.logger.Logger;
