@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-public class RandomMusicRepository extends Repository {
+public class MusicRepository extends Repository {
+    private String ARTIST_TABLE_NAME = "Artist";
+    private String TRACK_TABLE_NAME = "Track";
+    private String GENRE_TABLE_NAME = "Genre";
 
-    public RandomMusicRepository(Logger logger) {
+    public MusicRepository(Logger logger) {
         super(logger);
     }
 
@@ -19,7 +22,7 @@ public class RandomMusicRepository extends Repository {
             return artistNames;
         }
         try {
-            artistNames = getNamesFromDatabase("Artist", amountOfArtists);
+            artistNames = getNamesFromDatabase(ARTIST_TABLE_NAME, amountOfArtists);
             logger.logToConsole("\t" + artistNames.size() + " artist names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
@@ -29,14 +32,14 @@ public class RandomMusicRepository extends Repository {
         return artistNames;
     }
 
-    public ArrayList<String> randomSongNames(int amountOfSongs){
+    public ArrayList<String> randomSongNames(int amountOfSongs) {
         ArrayList<String> songNames = null;
         if (amountOfSongs < 1) {
             logger.errorToConsole("invalid amount of songs: " + amountOfSongs);
             return songNames;
         }
         try {
-            songNames = getNamesFromDatabase("Track", amountOfSongs);
+            songNames = getNamesFromDatabase(TRACK_TABLE_NAME, amountOfSongs);
             logger.logToConsole("\t" + songNames.size() + " song names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
@@ -46,14 +49,14 @@ public class RandomMusicRepository extends Repository {
         return songNames;
     }
 
-    public ArrayList<String> randomGenres(int amountOfGenres){
+    public ArrayList<String> randomGenres(int amountOfGenres) {
         ArrayList<String> genres = null;
         if (amountOfGenres < 1) {
             logger.errorToConsole("invalid amount of genres: " + amountOfGenres);
             return genres;
         }
         try {
-            genres = getNamesFromDatabase("Genre", amountOfGenres);
+            genres = getNamesFromDatabase(GENRE_TABLE_NAME, amountOfGenres);
             logger.logToConsole("\t" + genres.size() + " genres returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
@@ -63,14 +66,19 @@ public class RandomMusicRepository extends Repository {
         return genres;
     }
 
-    private ArrayList<String> getNamesFromDatabase(String table, int number) throws Exception {
+    //public Song getSongByName(Song song)
+
+    private ArrayList<String> getNamesFromDatabase(String table, int amount) throws Exception {
         openConnectionAndLog();
         PreparedStatement preparedStatement =
-                prepareQuery("" +
-                        "select Name from "
-                        + table +
-                        "order by random() limit ?;");
-        preparedStatement.setInt(1, number);
+                prepareQuery("""
+                        select Name
+                        from ?
+                        order by random()
+                        limit ?;
+                        """);
+        preparedStatement.setString(1, table);
+        preparedStatement.setInt(2, amount);
         ResultSet resultSet = preparedStatement.executeQuery();
         return parseNames(resultSet);
     }
