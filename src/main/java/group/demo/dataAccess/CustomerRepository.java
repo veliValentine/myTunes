@@ -38,7 +38,7 @@ public class CustomerRepository extends Repository{
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return customers;
     }
@@ -70,7 +70,7 @@ public class CustomerRepository extends Repository{
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return customer;
     }
@@ -92,7 +92,7 @@ public class CustomerRepository extends Repository{
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return success;
     }
@@ -119,7 +119,7 @@ public class CustomerRepository extends Repository{
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return success;
     }
@@ -141,7 +141,7 @@ public class CustomerRepository extends Repository{
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return countryMap;
     }
@@ -173,7 +173,7 @@ public class CustomerRepository extends Repository{
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return customers;
     }
@@ -230,7 +230,7 @@ public class CustomerRepository extends Repository{
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return genres;
     }

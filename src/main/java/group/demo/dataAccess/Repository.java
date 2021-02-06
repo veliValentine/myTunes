@@ -23,7 +23,7 @@ public abstract class Repository {
         return connection.prepareStatement(query);
     }
 
-    protected void finallyCloseConnectionAndLog() {
+    protected void closeConnectionAndLog() {
         try {
             connection.close();
             logger.logToConsole("Connection to database closed");
