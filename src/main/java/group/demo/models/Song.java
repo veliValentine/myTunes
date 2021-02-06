@@ -7,6 +7,16 @@ public class Song {
     private String album;
     private String genre;
 
+    public Song() {
+    }
+
+    public Song(String id, String trackName, String artist, String album, String genre) {
+        this.id = id;
+        this.trackName = trackName;
+        this.artist = artist;
+        this.album = album;
+        this.genre = genre;
+    }
 
     // Getters and setters
     public String getTrackName() {
