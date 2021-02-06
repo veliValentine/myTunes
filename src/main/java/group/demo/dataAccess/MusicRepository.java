@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class MusicRepository extends Repository {
-    private String ARTIST_TABLE_NAME = "Artist";
-    private String TRACK_TABLE_NAME = "Track";
-    private String GENRE_TABLE_NAME = "Genre";
+    private final String ARTIST_TABLE_NAME = "Artist";
+    private final String TRACK_TABLE_NAME = "Track";
+    private final String GENRE_TABLE_NAME = "Genre";
 
     public MusicRepository(Logger logger) {
         super(logger);
@@ -19,7 +19,7 @@ public class MusicRepository extends Repository {
         ArrayList<String> artistNames = null;
         if (amountOfArtists < 1) {
             logger.errorToConsole("invalid amount of artists: " + amountOfArtists);
-            return artistNames;
+            return null;
         }
         try {
             artistNames = getNamesFromDatabase(ARTIST_TABLE_NAME, amountOfArtists);
@@ -36,7 +36,7 @@ public class MusicRepository extends Repository {
         ArrayList<String> songNames = null;
         if (amountOfSongs < 1) {
             logger.errorToConsole("invalid amount of songs: " + amountOfSongs);
-            return songNames;
+            return null;
         }
         try {
             songNames = getNamesFromDatabase(TRACK_TABLE_NAME, amountOfSongs);
@@ -53,7 +53,7 @@ public class MusicRepository extends Repository {
         ArrayList<String> genres = null;
         if (amountOfGenres < 1) {
             logger.errorToConsole("invalid amount of genres: " + amountOfGenres);
-            return genres;
+            return null;
         }
         try {
             genres = getNamesFromDatabase(GENRE_TABLE_NAME, amountOfGenres);
