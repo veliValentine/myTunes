@@ -3,8 +3,8 @@ package group.demo.models;
 public class Song {
     private String id;
     private String trackName;
-    private String artist;
-    private String album;
+    private String composer;
+    private String albumName;
     private String genre;
 
     public Song() {
@@ -13,8 +13,8 @@ public class Song {
     public Song(String id, String trackName, String artist, String album, String genre) {
         this.id = id;
         this.trackName = trackName;
-        this.artist = artist;
-        this.album = album;
+        this.composer = artist;
+        this.albumName = album;
         this.genre = genre;
     }
 
@@ -27,20 +27,20 @@ public class Song {
         this.trackName = trackName;
     }
 
-    public String getArtist() {
-        return artist;
+    public String getComposer() {
+        return composer;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setComposer(String composer) {
+        this.composer = composer;
     }
 
-    public String getAlbum() {
-        return album;
+    public String getAlbumName() {
+        return albumName;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
     }
 
     public String getGenre() {
