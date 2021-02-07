@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/main.css}">
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>myTunes</title>
+</head>
+<body>
+<div>
+    <div>
+        <a th:href="@{/}">Home</a>
+    </div>
+    <div>
+        <h2>Song</h2>
+        <table>
+            <tbody>
+            <tr>
+                <td><p>Song name: [[${song.getTrackName()}]]</p></td>
+            </tr>
+            <tr>
+                <td><p>Composer: [[${song.getComposer()}]]</p></td>
+            </tr>
+            <tr>
+                <td><p>Album: [[${song.getAlbumName()}]]</p></td>
+            </tr>
+            <tr>
+                <td><p>Genre: [[${song.getGenre()}]]</p></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <p>
+            <a href="https://github.com/veliValentine/myTunes">Source code</a>
+            By <a href="https://github.com/veliValentine">github/veliValentine</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

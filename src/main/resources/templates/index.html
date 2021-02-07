@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/main.css}">
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>myTunes</title>
+</head>
+<body>
+<div>
+    <div>
+        <a th:href="@{/}">Home</a>
+        <div>
+            <h2>Search song</h2>
+            <form th:action="@{/}" th:object="${searchSong}" method="post">
+                <input placeholder="By name" type="text" required="required" th:field="*{trackName}"/>
+                <button type="submit">search</button>
+            </form>
+        </div>
+    </div>
+    <h1>Welcome</h1>
+    <div>
+        <div>
+            <h4>Random songs</h4>
+            <table>
+                <tbody>
+                <tr th:each="randomSong: ${randomSongs}">
+                    <td th:text="${randomSong}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h4>Random artists</h4>
+            <table>
+                <tbody>
+                <tr th:each="randomArtist: ${randomArtists}">
+                    <td th:text="${randomArtist}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h4>Random genres</h4>
+            <table>
+                <tbody>
+                <tr th:each="randomGenres: ${randomGenres}">
+                    <td th:text="${randomGenres}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <p>
+                <a href="https://github.com/veliValentine/myTunes">Source code</a>
+                By <a href="https://github.com/veliValentine">github/veliValentine</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -4,19 +4,13 @@ import group.demo.logger.Logger;
 import group.demo.models.Customer;
 import group.demo.models.SpendingCustomer;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CustomerRepository {
-    private Connection connection = null;
-
-    private final Logger logger;
-
+public class CustomerRepository extends Repository{
     private final String baseCustomerFields = "" +
             "FirstName, " +
             "LastName, " +
@@ -26,7 +20,7 @@ public class CustomerRepository {
             "Email ";
 
     public CustomerRepository(Logger logger) {
-        this.logger = logger;
+        super(logger);
     }
 
     public ArrayList<Customer> getCustomers() {
@@ -44,7 +38,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return customers;
     }
@@ -76,7 +70,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return customer;
     }
@@ -98,7 +92,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return success;
     }
@@ -125,7 +119,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return success;
     }
@@ -147,7 +141,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return countryMap;
     }
@@ -179,7 +173,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return customers;
     }
@@ -236,7 +230,7 @@ public class CustomerRepository {
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
-            finallyCloseConnectionAndLog();
+            closeConnectionAndLog();
         }
         return genres;
     }
@@ -250,15 +244,6 @@ public class CustomerRepository {
     }
 
     // helper methods used more than once
-    private void openConnectionAndLog() throws Exception {
-        connection = DriverManager.getConnection(ConnectionHelper.CONNECTION_URL);
-        logger.logToConsole("Connection to database opened");
-    }
-
-    private PreparedStatement prepareQuery(String query) throws Exception {
-        return connection.prepareStatement(query);
-    }
-
     private void setBaseCustomerValuesToPreparedStatement(PreparedStatement preparedStatement, Customer customer) throws Exception {
         preparedStatement.setString(1, customer.getFirstName());
         preparedStatement.setString(2, customer.getLastName());
@@ -278,14 +263,5 @@ public class CustomerRepository {
                 resultSet.getString("Phone"),
                 resultSet.getString("Email")
         );
-    }
-
-    private void finallyCloseConnectionAndLog() {
-        try {
-            connection.close();
-            logger.logToConsole("Connection to database closed");
-        } catch (Exception e) {
-            logger.errorToConsole(e.toString());
-        }
     }
 }
