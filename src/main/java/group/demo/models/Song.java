@@ -20,6 +20,9 @@ public class Song {
 
     // Getters and setters
     public String getTrackName() {
+        if(trackName == null){
+            return "---";
+        }
         return trackName;
     }
 
@@ -28,6 +31,9 @@ public class Song {
     }
 
     public String getComposer() {
+        if(composer == null){
+            return "---";
+        }
         return composer;
     }
 
@@ -36,6 +42,9 @@ public class Song {
     }
 
     public String getAlbumName() {
+        if(albumName == null){
+            return "---";
+        }
         return albumName;
     }
 
@@ -44,6 +53,9 @@ public class Song {
     }
 
     public String getGenre() {
+        if(genre == null){
+            return "---";
+        }
         return genre;
     }
 
