@@ -39,8 +39,8 @@
     <div>
         <h2>New search</h2>
         <form th:action="@{/}" th:object="${searchSong}" method="post">
-            <label>Song name</label>
-            <input type="text" required="required" th:field="*{trackName}"/>
+            <label for="trackName">Song name</label>
+            <input id="trackName" type="text" required="required" th:field="*{trackName}"/>
             <button type="submit">search</button>
         </form>
     </div>

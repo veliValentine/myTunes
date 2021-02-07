@@ -16,8 +16,8 @@
     <div>
         <h2>Search song</h2>
         <form th:action="@{/}" th:object="${searchSong}" method="post">
-            <label>By name</label>
-            <input type="text" required="required" th:field="*{trackName}"/>
+            <label for="trackName">By name</label>
+            <input id="trackName" type="text" required="required" th:field="*{trackName}"/>
             <button type="submit">search</button>
         </form>
     </div>
