@@ -14,8 +14,7 @@
         <div>
             <h2>Search song</h2>
             <form th:action="@{/}" th:object="${searchSong}" method="post">
-                <label for="trackName">By name</label>
-                <input id="trackName" type="text" required="required" th:field="*{trackName}"/>
+                <input placeholder="By name" type="text" required="required" th:field="*{trackName}"/>
                 <button type="submit">search</button>
             </form>
         </div>
@@ -51,6 +50,12 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+        <div>
+            <p>
+                <a href="https://github.com/veliValentine/myTunes">Source code</a>
+                By <a href="https://github.com/veliValentine">github/veliValentine</a>
+            </p>
         </div>
     </div>
 </div>

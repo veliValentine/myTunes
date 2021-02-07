@@ -42,6 +42,7 @@ public class HomeController {
         model.addAttribute("success", success);
         model.addAttribute("searchSongs", searchSongsResult);
         model.addAttribute("searchSong", new Song());
+        model.addAttribute("searchParam", songName);
         return "searchPage";
     }
 

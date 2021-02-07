@@ -13,22 +13,29 @@
         <a th:href="@{/}">Home</a>
     </div>
     <div>
+        <h2>Song</h2>
         <table>
             <tbody>
             <tr>
-                <th>Song name</th>
-                <th>Artist</th>
-                <th>Album</th>
-                <th>Genre</th>
+                <td><p>Song name: [[${song.getTrackName()}]]</p></td>
             </tr>
             <tr>
-                <td th:text="${song.getTrackName()}"></td>
-                <td th:text="${song.getComposer()}"></td>
-                <td th:text="${song.getAlbumName()}"></td>
-                <td th:text="${song.getGenre()}"></td>
+                <td><p>Composer: [[${song.getComposer()}]]</p></td>
+            </tr>
+            <tr>
+                <td><p>Album: [[${song.getAlbumName()}]]</p></td>
+            </tr>
+            <tr>
+                <td><p>Genre: [[${song.getGenre()}]]</p></td>
             </tr>
             </tbody>
         </table>
+    </div>
+    <div>
+        <p>
+            <a href="https://github.com/veliValentine/myTunes">Source code</a>
+            By <a href="https://github.com/veliValentine">github/veliValentine</a>
+        </p>
     </div>
 </div>
 </body>
