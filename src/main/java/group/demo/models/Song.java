@@ -20,9 +20,6 @@ public class Song {
 
     // Getters and setters
     public String getTrackName() {
-        if(trackName == null){
-            return "---";
-        }
         return trackName;
     }
 
