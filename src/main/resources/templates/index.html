@@ -11,16 +11,16 @@
 <div>
     <div>
         <a th:href="@{/}">Home</a>
+        <div>
+            <h2>Search song</h2>
+            <form th:action="@{/}" th:object="${searchSong}" method="post">
+                <label for="trackName">By name</label>
+                <input id="trackName" type="text" required="required" th:field="*{trackName}"/>
+                <button type="submit">search</button>
+            </form>
+        </div>
     </div>
     <h1>Welcome</h1>
-    <div>
-        <h2>Search song</h2>
-        <form th:action="@{/}" th:object="${searchSong}" method="post">
-            <label for="trackName">By name</label>
-            <input id="trackName" type="text" required="required" th:field="*{trackName}"/>
-            <button type="submit">search</button>
-        </form>
-    </div>
     <div>
         <div>
             <h4>Random songs</h4>

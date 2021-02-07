@@ -11,6 +11,14 @@
 <div>
     <div>
         <a th:href="@{/}">Home</a>
+        <div>
+            <h2>Search song</h2>
+            <form th:action="@{/}" th:object="${searchSong}" method="post">
+                <label for="trackName">By name</label>
+                <input id="trackName" type="text" required="required" th:field="*{trackName}"/>
+                <button type="submit">search</button>
+            </form>
+        </div>
     </div>
     <div>
         <h1>Results</h1>
@@ -28,6 +36,7 @@
                     <td th:text="${song.getComposer()}"></td>
                     <td th:text="${song.getAlbumName()}"></td>
                     <td th:text="${song.getGenre()}"></td>
+                    <td><a th:href="@{/song/{id}(id=${song.getId()})}">Song details</a> </td>
                 </tr>
                 </tbody>
             </table>
@@ -35,14 +44,6 @@
         <div th:if="${success} == false">
             <p>No results found!</p>
         </div>
-    </div>
-    <div>
-        <h2>New search</h2>
-        <form th:action="@{/}" th:object="${searchSong}" method="post">
-            <label for="trackName">Song name</label>
-            <input id="trackName" type="text" required="required" th:field="*{trackName}"/>
-            <button type="submit">search</button>
-        </form>
     </div>
 </div>
 </body>
