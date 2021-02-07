@@ -73,12 +73,11 @@ public class MusicRepository extends Repository {
         try {
             openConnectionAndLog();
             PreparedStatement preparedStatement =
-                    prepareQuery("""
-                            select TrackId as ID, Track.Name as Name, Track.Composer, A.Title, g.Name as Genre from Track
-                            join Album A on A.AlbumId = Track.AlbumId
-                            join Genre G on Track.GenreId = G.GenreId
-                            where Track.Name like ?;
-                            """);
+                    prepareQuery("" +
+                            "select TrackId as ID, Track.Name as Name, Track.Composer, A.Title, g.Name as Genre from Track\n" +
+                            "   join Album A on A.AlbumId = Track.AlbumId\n" +
+                            "   join Genre G on Track.GenreId = G.GenreId\n" +
+                            "where Track.Name like ?;");
             preparedStatement.setString(1, "%" + name + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
             songs.addAll(parseSongSearchResultSet(resultSet));
@@ -102,23 +101,23 @@ public class MusicRepository extends Repository {
         return songs;
     }
 
-    public Song getSongById(String id){
+    public Song getSongById(String id) {
         Song song = null;
         try {
             openConnectionAndLog();
             PreparedStatement preparedStatement =
-                    prepareQuery("""
-                            select TrackId as ID, Track.Name as Name, Track.Composer, A.Title, g.Name as Genre
-                            from Track
-                                     join Album A on A.AlbumId = Track.AlbumId
-                                     join Genre G on Track.GenreId = G.GenreId
-                            where TrackId = ?;
-                            """);
+                    prepareQuery("" +
+                            "select TrackId as ID, Track.Name as Name, Track.Composer, A.Title, g.Name as Genre\n" +
+                            "from Track\n" +
+                            "   join Album A on A.AlbumId = Track.AlbumId\n" +
+                            "   join Genre G on Track.GenreId = G.GenreId\n" +
+                            "where TrackId = ?;"
+                    );
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             song = parseSongResultSet(resultSet);
             logger.logToConsole("\tget song by id success");
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
             closeConnectionAndLog();

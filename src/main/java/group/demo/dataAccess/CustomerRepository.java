@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CustomerRepository extends Repository{
+public class CustomerRepository extends Repository {
     private final String baseCustomerFields = "" +
             "FirstName, " +
             "LastName, " +
@@ -198,31 +198,30 @@ public class CustomerRepository extends Repository{
             // Query gets genreName from table that contains customerId, genreName and total genreCount for wanted customer
             // from there it gets all genreCounts that equals to biggest genreCount (where genreCount = secondQuery)
             PreparedStatement preparedStatement =
-                    prepareQuery("""
-                            select genreName
-                            from (
-                                     select Customer.CustomerId as id, Genre.Name as genreName, count(Genre.Name) as genreCount
-                                     from Customer
-                                              join Invoice on Customer.CustomerId = Invoice.CustomerId
-                                              join InvoiceLine on Invoice.InvoiceId = InvoiceLine.InvoiceId
-                                              join Track on InvoiceLine.TrackId = Track.TrackId
-                                              join Genre on Track.GenreId = Genre.GenreId
-                                     where Customer.CustomerId = ?
-                                     group by Genre.Name
-                                     order by count(Genre.Name) DESC
-                                 )
-                            where genreCount = (
-                                select count(genre.name)
-                                from Invoice
-                                         join InvoiceLine on Invoice.InvoiceId = InvoiceLine.InvoiceId
-                                         join Track on InvoiceLine.TrackId = Track.TrackId
-                                         join Genre on Track.GenreId = Genre.GenreId
-                                where Invoice.CustomerId = id
-                                group by Genre.Name
-                                order by count(Genre.Name) DESC
-                                limit 1
-                            )"""
-                    );
+                    prepareQuery("" +
+                            "select genreName\n" +
+                            "   from (\n" +
+                            "       select Customer.CustomerId as id, Genre.Name as genreName, count(Genre.Name) as genreCount\n" +
+                            "           from Customer\n" +
+                            "           join Invoice on Customer.CustomerId = Invoice.CustomerId\n" +
+                            "           join InvoiceLine on Invoice.InvoiceId = InvoiceLine.InvoiceId\n" +
+                            "           join Track on InvoiceLine.TrackId = Track.TrackId\n" +
+                            "           join Genre on Track.GenreId = Genre.GenreId\n" +
+                            "       where Customer.CustomerId = ?\n" +
+                            "       group by Genre.Name\n" +
+                            "       order by count(Genre.Name) DESC\n" +
+                            "   )\n" +
+                            "   where genreCount = (\n" +
+                            "       select count(genre.name)\n" +
+                            "       from Invoice\n" +
+                            "           join InvoiceLine on Invoice.InvoiceId = InvoiceLine.InvoiceId\n" +
+                            "           join Track on InvoiceLine.TrackId = Track.TrackId\n" +
+                            "           join Genre on Track.GenreId = Genre.GenreId\n" +
+                            "       where Invoice.CustomerId = id\n" +
+                            "       group by Genre.Name\n" +
+                            "       order by count(Genre.Name) DESC\n" +
+                            "       limit 1\n" +
+                            "   )");
             preparedStatement.setString(1, customerID);
             ResultSet resultSet = preparedStatement.executeQuery();
             genres = parseGenreResultSet(resultSet);
