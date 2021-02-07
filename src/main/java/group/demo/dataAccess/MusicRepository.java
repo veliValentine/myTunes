@@ -67,8 +67,9 @@ public class MusicRepository extends Repository {
         return genres;
     }
 
-    public ArrayList<Song> searchSongsByName(String name) {
-        ArrayList<Song> songs = null;
+    public boolean searchSongsByName(String name, ArrayList<Song> songs) {
+        songs.clear();
+        boolean success = false;
         try {
             openConnectionAndLog();
             PreparedStatement preparedStatement =
@@ -80,14 +81,17 @@ public class MusicRepository extends Repository {
                             """);
             preparedStatement.setString(1, "%" + name + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
-            songs = parseSongSearchResultSet(resultSet);
+            songs.addAll(parseSongSearchResultSet(resultSet));
+            if (songs.size() > 0) {
+                success = true;
+            }
             logger.logToConsole("\tsearched songs successful");
         } catch (Exception e) {
             logger.logToConsole(e.toString());
         } finally {
             closeConnectionAndLog();
         }
-        return songs;
+        return success;
     }
 
     private ArrayList<Song> parseSongSearchResultSet(ResultSet resultSet) throws Exception {
@@ -96,6 +100,30 @@ public class MusicRepository extends Repository {
             songs.add(parseSongResultSet(resultSet));
         }
         return songs;
+    }
+
+    public Song getSongById(String id){
+        Song song = null;
+        try {
+            openConnectionAndLog();
+            PreparedStatement preparedStatement =
+                    prepareQuery("""
+                            select TrackId as ID, Track.Name as Name, Track.Composer, A.Title, g.Name as Genre
+                            from Track
+                                     join Album A on A.AlbumId = Track.AlbumId
+                                     join Genre G on Track.GenreId = G.GenreId
+                            where TrackId = ?;
+                            """);
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            song = parseSongResultSet(resultSet);
+            logger.logToConsole("\tget song by id success");
+        } catch (Exception e){
+            logger.errorToConsole(e.toString());
+        } finally {
+            closeConnectionAndLog();
+        }
+        return song;
     }
 
     private Song parseSongResultSet(ResultSet resultSet) throws Exception {
