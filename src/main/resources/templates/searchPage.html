@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/main.css}">
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>myTunes</title>
+</head>
+<body>
+<div>
+    <div>
+        <a th:href="@{/}">Home</a>
+    </div>
+    <div>
+        <h1>Results</h1>
+        <div th:if="${success}">
+            <table>
+                <tbody>
+                <tr>
+                    <th>Song name</th>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th>Genre</th>
+                </tr>
+                <tr th:each="song: ${searchSongs}">
+                    <td th:text="${song.getTrackName()}"></td>
+                    <td th:text="${song.getComposer()}"></td>
+                    <td th:text="${song.getAlbumName()}"></td>
+                    <td th:text="${song.getGenre()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${success} == false">
+            <p>No results found!</p>
+        </div>
+    </div>
+    <div>
+        <h2>New search</h2>
+        <form th:action="@{/}" th:object="${searchSong}" method="post">
+            <label>Song name</label>
+            <input type="text" required="required" th:field="*{trackName}"/>
+            <button type="submit">search</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

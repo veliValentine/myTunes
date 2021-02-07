@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/main.css}">
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>myTunes</title>
+</head>
+<body>
+<div>
+    <div>
+        <a th:href="@{/}">Home</a>
+    </div>
+    <div>
+        <table>
+            <tbody>
+            <tr>
+                <th>Song name</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th>Genre</th>
+            </tr>
+            <tr>
+                <td th:text="${song.getTrackName()}"></td>
+                <td th:text="${song.getComposer()}"></td>
+                <td th:text="${song.getAlbumName()}"></td>
+                <td th:text="${song.getGenre()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
