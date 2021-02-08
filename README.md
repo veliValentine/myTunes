@@ -95,13 +95,13 @@ API returns JSON objects. Here are example snippets of responses made to APIs ma
 
 ```json
 {
-  id: "2",
-  firstName: "Leonie",
-  lastName: "Köhler",
-  country: "Germany",
-  postalCode: "70174",
-  phoneNumber: "+49 0711 2842222",
-  email: "leonekohler@surfeu.de"
+  "id": "2",
+  "firstName": "Leonie",
+  "lastName": "Köhler",
+  "country": "Germany",
+  "postalCode": "70174",
+  "phoneNumber": "+49 0711 2842222",
+  "email": "leonekohler@surfeu.de"
 }
 ```
 
@@ -157,8 +157,8 @@ Example of list object:
 
 ```json
 {
-  country: "USA",
-  count: 13
+  "country": "USA",
+  "count": 13
 }
 ```
 
@@ -172,14 +172,14 @@ Example of customer object with total spending:
 
 ```json
 {
-  id: "6",
-  firstName: "Helena",
-  lastName: "Holý",
-  country: "Czech Republic",
-  postalCode: "14300",
-  phoneNumber: "+420 2 4177 0449",
-  email: "hholy@gmail.com",
-  totalSpending: 49.62
+  "id": "6",
+  "firstName": "Helena",
+  "lastName": "Holý",
+  "country": "Czech Republic",
+  "postalCode": "14300",
+  "phoneNumber": "+420 2 4177 0449",
+  "email": "hholy@gmail.com",
+  "totalSpending": 49.62
 }
 ```
 
