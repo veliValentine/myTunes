@@ -24,7 +24,7 @@ public class MusicRepository extends Repository {
         }
         try {
             artistNames = getNamesFromDatabase(ARTIST_TABLE_NAME, amountOfArtists);
-            logger.logToConsole("\tartist names returned from database");
+            logger.logToConsole("artist names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -41,7 +41,7 @@ public class MusicRepository extends Repository {
         }
         try {
             songNames = getNamesFromDatabase(TRACK_TABLE_NAME, amountOfSongs);
-            logger.logToConsole("\tsong names returned from database");
+            logger.logToConsole("song names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -58,7 +58,7 @@ public class MusicRepository extends Repository {
         }
         try {
             genres = getNamesFromDatabase(GENRE_TABLE_NAME, amountOfGenres);
-            logger.logToConsole("\tgenres returned from database");
+            logger.logToConsole("genres returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -84,7 +84,7 @@ public class MusicRepository extends Repository {
             if (songs.size() > 0) {
                 success = true;
             }
-            logger.logToConsole("\tsearched songs successful");
+            logger.logToConsole("searched songs successful");
         } catch (Exception e) {
             logger.logToConsole(e.toString());
         } finally {
@@ -116,7 +116,7 @@ public class MusicRepository extends Repository {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             song = parseSongResultSet(resultSet);
-            logger.logToConsole("\tget song by id success");
+            logger.logToConsole("get song by id success");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {

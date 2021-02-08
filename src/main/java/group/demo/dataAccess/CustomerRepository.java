@@ -34,7 +34,7 @@ public class CustomerRepository extends Repository {
             ResultSet resultSet = preparedStatement.executeQuery();
             // Create new Customers list and add each customer to it
             customers = parseCustomersResultSet(resultSet);
-            logger.logToConsole("\tgetCustomers successful");
+            logger.logToConsole("getCustomers successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -66,7 +66,7 @@ public class CustomerRepository extends Repository {
             while (resultSet.next()) {
                 customer = parseCustomerResultSet(resultSet);
             }
-            logger.logToConsole("\tgetCustomer successful");
+            logger.logToConsole("getCustomer successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -87,7 +87,7 @@ public class CustomerRepository extends Repository {
             // run statement and get result
             int result = preparedStatement.executeUpdate();
             success = (result != 0);
-            logger.logToConsole("\taddCustomer successful: " + success);
+            logger.logToConsole("addCustomer successful: " + success);
 
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
@@ -115,7 +115,7 @@ public class CustomerRepository extends Repository {
             // run statement and get result
             int result = preparedStatement.executeUpdate();
             success = (result != 0);
-            logger.logToConsole("\tcustomer updated successful: " + success);
+            logger.logToConsole("customer updated successful: " + success);
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -137,7 +137,7 @@ public class CustomerRepository extends Repository {
             ResultSet resultSet = preparedStatement.executeQuery();
             // Parse resultSet to country->count Map
             countryMap = parseResultToCountyCountLinkedHashMap(resultSet);
-            logger.logToConsole("\tcustomersInCountry successful");
+            logger.logToConsole("customersInCountry successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -169,7 +169,7 @@ public class CustomerRepository extends Repository {
                             "order by sum(total) desc;");
             ResultSet resultSet = preparedStatement.executeQuery();
             customers = parseSpendingCustomersResultSet(resultSet);
-            logger.logToConsole("\tgetSpendingCustomers successful");
+            logger.logToConsole("getSpendingCustomers successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -225,7 +225,7 @@ public class CustomerRepository extends Repository {
             preparedStatement.setString(1, customerID);
             ResultSet resultSet = preparedStatement.executeQuery();
             genres = parseGenreResultSet(resultSet);
-            logger.logToConsole("\tgetCustomerGenres successful");
+            logger.logToConsole("getCustomerGenres successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
