@@ -27,7 +27,7 @@ Application is running in [heroku](https://velivalentine-mytunes.herokuapp.com/)
 <a name="description"></a>
 
 ## Description
-Full description of myTunes application can be found in the [documents](/documents/Task%204.pdf)
+Full description of myTunes application can be found in the [documents](/documents/Task%204.pdf).
 
 Application contains simple user interface (UI) and REST API. The UI is build using Java thymeleaf and the API Java
 Spring. Application relies on Chinook-database that can be
