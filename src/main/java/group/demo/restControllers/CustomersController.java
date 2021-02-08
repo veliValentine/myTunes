@@ -24,7 +24,7 @@ public class CustomersController {
     }
 
     // add customer
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public boolean addCustomer(@RequestBody Customer customer) {
         return customerRepository.addCustomer(customer);
     }
