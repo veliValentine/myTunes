@@ -1,5 +1,7 @@
 # myTunes
-myTunes is Thymeleaf/REST java application. Read more about the application [here](#description)
+myTunes is Thymeleaf/REST java application.
+
+Read more about the application [here](#description)
 and more about the use cases [here](#usage).
 
 Application is running in [heroku](https://velivalentine-mytunes.herokuapp.com/) at 
