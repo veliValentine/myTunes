@@ -1,14 +1,13 @@
 package group.demo.dataAccess;
 
 import group.demo.logger.Logger;
+import group.demo.models.CountryCustomerCount;
 import group.demo.models.Customer;
 import group.demo.models.SpendingCustomer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class CustomerRepository extends Repository {
     // common customer fields to all queries
@@ -117,8 +116,8 @@ public class CustomerRepository extends Repository {
         return success;
     }
 
-    public Map<String, String> customersInCountry() {
-        Map<String, String> countryMap = null;
+    public ArrayList<CountryCustomerCount> customerInCountry() {
+        ArrayList<CountryCustomerCount> countryCustomerCounts = null;
         try {
             openConnectionAndLog();
             PreparedStatement preparedStatement = prepareQuery("" +
@@ -129,25 +128,26 @@ public class CustomerRepository extends Repository {
                     "order by COUNT(Country) DESC;");
             ResultSet resultSet = preparedStatement.executeQuery();
             // Parse resultSet to country->count Map
-            countryMap = parseResultSetToCountyCountLinkedHashMap(resultSet);
+            countryCustomerCounts = parseResultSetToCountyCountArray(resultSet);
             logger.logToConsole("customersInCountry successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
             closeConnectionAndLog();
         }
-        return countryMap;
+        return countryCustomerCounts;
     }
 
-    private LinkedHashMap<String, String> parseResultSetToCountyCountLinkedHashMap(ResultSet resultSet) throws Exception {
-        LinkedHashMap<String, String> countryMap = new LinkedHashMap<>();
+    private ArrayList<CountryCustomerCount> parseResultSetToCountyCountArray(ResultSet resultSet) throws Exception {
+        ArrayList<CountryCustomerCount> counts = new ArrayList<>();
         while (resultSet.next()) {
-            countryMap.put(
-                    resultSet.getString("Country"),
-                    resultSet.getString("count(country)")
+            counts.add(new CountryCustomerCount(
+                            resultSet.getString("Country"),
+                            Integer.parseInt(resultSet.getString("count(country)"))
+                    )
             );
         }
-        return countryMap;
+        return counts;
     }
 
     public ArrayList<SpendingCustomer> highestSpenders() {

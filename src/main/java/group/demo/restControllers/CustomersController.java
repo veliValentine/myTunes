@@ -2,13 +2,13 @@ package group.demo.restControllers;
 
 import group.demo.dataAccess.CustomerRepository;
 import group.demo.logger.Logger;
+import group.demo.models.CountryCustomerCount;
 import group.demo.models.Customer;
 
 import group.demo.models.SpendingCustomer;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(ControllerHelper.API_BASE_URL_v1 + "/customers")
@@ -31,8 +31,8 @@ public class CustomersController {
 
     // customer count by countries
     @RequestMapping(value = "/country", method = RequestMethod.GET)
-    public Map<String, String> customersInCountry() {
-        return customerRepository.customersInCountry();
+    public List<CountryCustomerCount> customersInCountry() {
+        return customerRepository.customerInCountry();
     }
 
     // customers ordered by their spending
