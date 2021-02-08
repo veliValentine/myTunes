@@ -1,16 +1,16 @@
 package group.demo.dataAccess;
 
 import group.demo.logger.Logger;
+import group.demo.models.CountryCustomerCount;
 import group.demo.models.Customer;
 import group.demo.models.SpendingCustomer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class CustomerRepository extends Repository {
+    // common customer fields to all queries
     private final String baseCustomerFields = "" +
             "FirstName, " +
             "LastName, " +
@@ -33,8 +33,8 @@ public class CustomerRepository extends Repository {
                     "from Customer;");
             ResultSet resultSet = preparedStatement.executeQuery();
             // Create new Customers list and add each customer to it
-            customers = parseCustomersResultSet(resultSet);
-            logger.logToConsole("\tgetCustomers successful");
+            customers = parseCustomersResultSetToArray(resultSet);
+            logger.logToConsole("getCustomers successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -43,7 +43,7 @@ public class CustomerRepository extends Repository {
         return customers;
     }
 
-    private ArrayList<Customer> parseCustomersResultSet(ResultSet resultSet) throws Exception {
+    private ArrayList<Customer> parseCustomersResultSetToArray(ResultSet resultSet) throws Exception {
         ArrayList<Customer> customers = new ArrayList<>();
         while (resultSet.next()) {
             customers.add(parseCustomerResultSet(resultSet));
@@ -60,13 +60,9 @@ public class CustomerRepository extends Repository {
                     "customerId, " + baseCustomerFields +
                     " from Customer where CustomerId = ?;");
             preparedStatement.setString(1, customerId);
-            // Execute
             ResultSet resultSet = preparedStatement.executeQuery();
-            // Parse data
-            while (resultSet.next()) {
-                customer = parseCustomerResultSet(resultSet);
-            }
-            logger.logToConsole("\tgetCustomer successful");
+            customer = parseCustomerResultSet(resultSet);
+            logger.logToConsole("getCustomer successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -84,11 +80,9 @@ public class CustomerRepository extends Repository {
                     "(FirstName, LastName, Country, PostalCode, Phone, Email)" +
                     " values (?,?,?,?,?,?);");
             setBaseCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
-            // run statement and get result
             int result = preparedStatement.executeUpdate();
             success = (result != 0);
-            logger.logToConsole("\taddCustomer successful: " + success);
-
+            logger.logToConsole("addCustomer successful: " + success);
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -109,13 +103,11 @@ public class CustomerRepository extends Repository {
                     "Update Customer Set " +
                     "FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? " +
                     "WHERE CustomerId = ?;");
-            // set basic Customer inputs and customer ID
             setBaseCustomerValuesToPreparedStatement(preparedStatement, inputCustomer);
             preparedStatement.setString(7, inputCustomer.getId());
-            // run statement and get result
             int result = preparedStatement.executeUpdate();
             success = (result != 0);
-            logger.logToConsole("\tcustomer updated successful: " + success);
+            logger.logToConsole("customer updated successful: " + success);
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -124,8 +116,8 @@ public class CustomerRepository extends Repository {
         return success;
     }
 
-    public Map<String, String> customersInCountry() {
-        Map<String, String> countryMap = null;
+    public ArrayList<CountryCustomerCount> customerInCountry() {
+        ArrayList<CountryCustomerCount> countryCustomerCounts = null;
         try {
             openConnectionAndLog();
             PreparedStatement preparedStatement = prepareQuery("" +
@@ -136,25 +128,26 @@ public class CustomerRepository extends Repository {
                     "order by COUNT(Country) DESC;");
             ResultSet resultSet = preparedStatement.executeQuery();
             // Parse resultSet to country->count Map
-            countryMap = parseResultToCountyCountLinkedHashMap(resultSet);
-            logger.logToConsole("\tcustomersInCountry successful");
+            countryCustomerCounts = parseResultSetToCountyCountArray(resultSet);
+            logger.logToConsole("customersInCountry successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
             closeConnectionAndLog();
         }
-        return countryMap;
+        return countryCustomerCounts;
     }
 
-    private LinkedHashMap<String, String> parseResultToCountyCountLinkedHashMap(ResultSet resultSet) throws Exception {
-        LinkedHashMap<String, String> countryMap = new LinkedHashMap<>();
+    private ArrayList<CountryCustomerCount> parseResultSetToCountyCountArray(ResultSet resultSet) throws Exception {
+        ArrayList<CountryCustomerCount> counts = new ArrayList<>();
         while (resultSet.next()) {
-            countryMap.put(
-                    resultSet.getString("Country"),
-                    resultSet.getString("count(country)")
+            counts.add(new CountryCustomerCount(
+                            resultSet.getString("Country"),
+                            Integer.parseInt(resultSet.getString("count(country)"))
+                    )
             );
         }
-        return countryMap;
+        return counts;
     }
 
     public ArrayList<SpendingCustomer> highestSpenders() {
@@ -168,8 +161,8 @@ public class CustomerRepository extends Repository {
                             "group by Invoice.CustomerId " +
                             "order by sum(total) desc;");
             ResultSet resultSet = preparedStatement.executeQuery();
-            customers = parseSpendingCustomersResultSet(resultSet);
-            logger.logToConsole("\tgetSpendingCustomers successful");
+            customers = parseSpendingCustomersResultSetToArray(resultSet);
+            logger.logToConsole("getSpendingCustomers successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -178,7 +171,7 @@ public class CustomerRepository extends Repository {
         return customers;
     }
 
-    private ArrayList<SpendingCustomer> parseSpendingCustomersResultSet(ResultSet resultSet) throws Exception {
+    private ArrayList<SpendingCustomer> parseSpendingCustomersResultSetToArray(ResultSet resultSet) throws Exception {
         ArrayList<SpendingCustomer> spendingCustomers = new ArrayList<>();
         while (resultSet.next()) {
             // get customer from result set
@@ -196,7 +189,8 @@ public class CustomerRepository extends Repository {
         try {
             openConnectionAndLog();
             // Query gets genreName from table that contains customerId, genreName and total genreCount for wanted customer
-            // from there it gets all genreCounts that equals to biggest genreCount (where genreCount = secondQuery)
+            // from there it gets all genreCounts that equals to biggest genreCount (where genreCount = secondQuery).
+            // Second query gets the biggest genre count value
             PreparedStatement preparedStatement =
                     prepareQuery("" +
                             "select genreName\n" +
@@ -224,8 +218,8 @@ public class CustomerRepository extends Repository {
                             "   )");
             preparedStatement.setString(1, customerID);
             ResultSet resultSet = preparedStatement.executeQuery();
-            genres = parseGenreResultSet(resultSet);
-            logger.logToConsole("\tgetCustomerGenres successful");
+            genres = parseGenreResultSetToArray(resultSet);
+            logger.logToConsole("getCustomerGenres successful");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -234,7 +228,7 @@ public class CustomerRepository extends Repository {
         return genres;
     }
 
-    private ArrayList<String> parseGenreResultSet(ResultSet resultSet) throws Exception {
+    private ArrayList<String> parseGenreResultSetToArray(ResultSet resultSet) throws Exception {
         ArrayList<String> genres = new ArrayList<>();
         while (resultSet.next()) {
             genres.add(resultSet.getString("genreName"));

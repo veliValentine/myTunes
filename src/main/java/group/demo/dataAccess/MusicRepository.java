@@ -23,8 +23,8 @@ public class MusicRepository extends Repository {
             return null;
         }
         try {
-            artistNames = getNamesFromDatabase(ARTIST_TABLE_NAME, amountOfArtists);
-            logger.logToConsole("\tartist names returned from database");
+            artistNames = getNameListFromDatabase(ARTIST_TABLE_NAME, amountOfArtists);
+            logger.logToConsole("artist names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -40,8 +40,8 @@ public class MusicRepository extends Repository {
             return null;
         }
         try {
-            songNames = getNamesFromDatabase(TRACK_TABLE_NAME, amountOfSongs);
-            logger.logToConsole("\tsong names returned from database");
+            songNames = getNameListFromDatabase(TRACK_TABLE_NAME, amountOfSongs);
+            logger.logToConsole("song names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -57,8 +57,8 @@ public class MusicRepository extends Repository {
             return null;
         }
         try {
-            genres = getNamesFromDatabase(GENRE_TABLE_NAME, amountOfGenres);
-            logger.logToConsole("\tgenres returned from database");
+            genres = getNameListFromDatabase(GENRE_TABLE_NAME, amountOfGenres);
+            logger.logToConsole("genres returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -80,11 +80,11 @@ public class MusicRepository extends Repository {
                             "where Track.Name like ?;");
             preparedStatement.setString(1, "%" + name + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
-            songs.addAll(parseSongSearchResultSet(resultSet));
+            songs.addAll(parseSongsResultSetToArray(resultSet));
             if (songs.size() > 0) {
                 success = true;
             }
-            logger.logToConsole("\tsearched songs successful");
+            logger.logToConsole("searched songs successful");
         } catch (Exception e) {
             logger.logToConsole(e.toString());
         } finally {
@@ -93,7 +93,7 @@ public class MusicRepository extends Repository {
         return success;
     }
 
-    private ArrayList<Song> parseSongSearchResultSet(ResultSet resultSet) throws Exception {
+    private ArrayList<Song> parseSongsResultSetToArray(ResultSet resultSet) throws Exception {
         ArrayList<Song> songs = new ArrayList<>();
         while (resultSet.next()) {
             songs.add(parseSongResultSet(resultSet));
@@ -116,7 +116,7 @@ public class MusicRepository extends Repository {
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             song = parseSongResultSet(resultSet);
-            logger.logToConsole("\tget song by id success");
+            logger.logToConsole("get song by id success");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
@@ -135,7 +135,7 @@ public class MusicRepository extends Repository {
         );
     }
 
-    private ArrayList<String> getNamesFromDatabase(String table, int amount) throws Exception {
+    private ArrayList<String> getNameListFromDatabase(String table, int amount) throws Exception {
         openConnectionAndLog();
         PreparedStatement preparedStatement =
                 prepareQuery("" +
@@ -145,10 +145,10 @@ public class MusicRepository extends Repository {
                         "limit ?;");
         preparedStatement.setInt(1, amount);
         ResultSet resultSet = preparedStatement.executeQuery();
-        return parseNames(resultSet);
+        return parseNamesResultSetToArray(resultSet);
     }
 
-    private ArrayList<String> parseNames(ResultSet resultSet) throws Exception {
+    private ArrayList<String> parseNamesResultSetToArray(ResultSet resultSet) throws Exception {
         ArrayList<String> artistNames = new ArrayList<>();
         while (resultSet.next()) {
             artistNames.add(resultSet.getString("Name"));
