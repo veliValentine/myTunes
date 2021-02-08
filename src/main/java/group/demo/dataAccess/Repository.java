@@ -10,12 +10,13 @@ public abstract class Repository {
     protected Connection connection;
     protected final Logger logger;
 
-    public Repository(Logger logger){
+    public Repository(Logger logger) {
         this.logger = logger;
     }
 
     protected void openConnectionAndLog() throws Exception {
         connection = DriverManager.getConnection(ConnectionHelper.CONNECTION_URL);
+        logger.logToConsole("---");
         logger.logToConsole("Connection to database opened");
     }
 

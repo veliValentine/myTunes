@@ -80,7 +80,7 @@ public class MusicRepository extends Repository {
                             "where Track.Name like ?;");
             preparedStatement.setString(1, "%" + name + "%");
             ResultSet resultSet = preparedStatement.executeQuery();
-            songs.addAll(parseSongSearchResultSet(resultSet));
+            songs.addAll(parseSongsResultSetToArray(resultSet));
             if (songs.size() > 0) {
                 success = true;
             }
@@ -93,7 +93,7 @@ public class MusicRepository extends Repository {
         return success;
     }
 
-    private ArrayList<Song> parseSongSearchResultSet(ResultSet resultSet) throws Exception {
+    private ArrayList<Song> parseSongsResultSetToArray(ResultSet resultSet) throws Exception {
         ArrayList<Song> songs = new ArrayList<>();
         while (resultSet.next()) {
             songs.add(parseSongResultSet(resultSet));
@@ -145,10 +145,10 @@ public class MusicRepository extends Repository {
                         "limit ?;");
         preparedStatement.setInt(1, amount);
         ResultSet resultSet = preparedStatement.executeQuery();
-        return parseNames(resultSet);
+        return parseNamesResultSetToArray(resultSet);
     }
 
-    private ArrayList<String> parseNames(ResultSet resultSet) throws Exception {
+    private ArrayList<String> parseNamesResultSetToArray(ResultSet resultSet) throws Exception {
         ArrayList<String> artistNames = new ArrayList<>();
         while (resultSet.next()) {
             artistNames.add(resultSet.getString("Name"));
