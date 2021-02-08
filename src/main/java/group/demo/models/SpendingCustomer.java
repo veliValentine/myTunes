@@ -11,4 +11,8 @@ public class SpendingCustomer extends Customer{
     public double getTotalSpending(){
         return totalSpending;
     }
+
+    public void setTotalSpending(double totalSpending) {
+        this.totalSpending = totalSpending;
+    }
 }
