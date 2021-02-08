@@ -23,7 +23,7 @@ public class MusicRepository extends Repository {
             return null;
         }
         try {
-            artistNames = getNamesFromDatabase(ARTIST_TABLE_NAME, amountOfArtists);
+            artistNames = getNameListFromDatabase(ARTIST_TABLE_NAME, amountOfArtists);
             logger.logToConsole("artist names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
@@ -40,7 +40,7 @@ public class MusicRepository extends Repository {
             return null;
         }
         try {
-            songNames = getNamesFromDatabase(TRACK_TABLE_NAME, amountOfSongs);
+            songNames = getNameListFromDatabase(TRACK_TABLE_NAME, amountOfSongs);
             logger.logToConsole("song names returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
@@ -57,7 +57,7 @@ public class MusicRepository extends Repository {
             return null;
         }
         try {
-            genres = getNamesFromDatabase(GENRE_TABLE_NAME, amountOfGenres);
+            genres = getNameListFromDatabase(GENRE_TABLE_NAME, amountOfGenres);
             logger.logToConsole("genres returned from database");
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
@@ -135,7 +135,7 @@ public class MusicRepository extends Repository {
         );
     }
 
-    private ArrayList<String> getNamesFromDatabase(String table, int amount) throws Exception {
+    private ArrayList<String> getNameListFromDatabase(String table, int amount) throws Exception {
         openConnectionAndLog();
         PreparedStatement preparedStatement =
                 prepareQuery("" +

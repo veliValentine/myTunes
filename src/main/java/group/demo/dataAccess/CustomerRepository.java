@@ -88,7 +88,6 @@ public class CustomerRepository extends Repository {
             int result = preparedStatement.executeUpdate();
             success = (result != 0);
             logger.logToConsole("addCustomer successful: " + success);
-
         } catch (Exception e) {
             logger.errorToConsole(e.toString());
         } finally {
